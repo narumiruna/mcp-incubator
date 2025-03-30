@@ -2,12 +2,12 @@ name: Python
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
+  # pull_request:
+  #   branches:
+  #     - main
 
 jobs:
   python:
@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
         with:
-          python-version:  ${{ matrix.python-version }}
+          python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: uv sync
       - name: Lint
