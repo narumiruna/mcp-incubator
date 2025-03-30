@@ -4,7 +4,12 @@ version = "0.1.0"
 description = ""
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = ["templatemcp"]
+dependencies = [
+    "openai-agents>=0.0.7",
+    "planningmcp",
+    "python-dotenv>=1.1.0",
+    "templatemcp",
+]
 
 [tool.uv.workspace]
 members = ["servers/templatemcp", "servers/planningmcp"]
