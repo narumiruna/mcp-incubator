@@ -17,22 +17,9 @@ GitHub
       "command": "uvx",
       "args": [
         "--from",
-        "git+https://github.com/narumiruna/templatemcp",
+        "git+https://github.com/nationalteam/mcp-servers#subdirectory=servers/templatemcp",
         "templatemcp"
       ]
-    }
-  }
-}
-```
-
-PyPI
-
-```json
-{
-  "mcpServers": {
-    "templatemcp": {
-      "command": "uvx",
-      "args": ["templatemcp"]
     }
   }
 }
@@ -48,7 +35,7 @@ Local
       "args": [
         "run",
         "--directory",
-        "/home/<user>/workspace/mcp-incubator/servers/templatemcp",
+        "/home/<user>/workspace/mcp-servers/servers/templatemcp",
         "templatemcp"
       ]
     }
