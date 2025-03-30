@@ -3,7 +3,7 @@ requires-python = ">=3.12"
 
 [manifest]
 members = [
-    "mcp-incubator",
+    "mcp-servers",
     "templatemcp",
 ]
 
@@ -196,7 +196,7 @@ wheels = [
 ]
 
 [[package]]
-name = "mcp-incubator"
+name = "mcp-servers"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
