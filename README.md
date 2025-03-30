@@ -1,4 +1,4 @@
-# mcp-server-template
+# MCP Server Template
 
 ### GitHub
 
