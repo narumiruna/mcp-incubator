@@ -1,47 +1,55 @@
 # MCP Server Template
 
-### GitHub
+## Tools
+
+- add_numbers
+
+## Usage
+
+[Install uv.](https://docs.astral.sh/uv/getting-started/installation/)
+
+GitHub
 
 ```json
 {
   "mcpServers": {
-    "mcp-server-template": {
+    "templatemcp": {
       "command": "uvx",
       "args": [
         "--from",
-        "git+https://github.com/narumiruna/mcp-server-template",
-        "mcp-server-template"
+        "git+https://github.com/narumiruna/templatemcp",
+        "templatemcp"
       ]
     }
   }
 }
 ```
 
-### PyPI
+PyPI
 
 ```json
 {
   "mcpServers": {
-    "mcp-server-template": {
+    "templatemcp": {
       "command": "uvx",
-      "args": ["mcp-server-template"]
+      "args": ["templatemcp"]
     }
   }
 }
 ```
 
-### Local
+Local
 
 ```json
 {
   "mcpServers": {
-    "mcp-server-template": {
+    "templatemcp": {
       "command": "uv",
       "args": [
         "run",
         "--directory",
-        "/home/<user>/workspace/mcp-server-template",
-        "mcp-server-template"
+        "/home/<user>/workspace/mcp-incubator/servers/templatemcp",
+        "templatemcp"
       ]
     }
   }
