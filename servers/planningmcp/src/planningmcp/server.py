@@ -7,7 +7,7 @@ from pydantic import Field
 # https://github.com/jlowin/fastmcp/issues/81#issuecomment-2714245145
 mcp = FastMCP(
     "Planning MCP Server",
-    instructions="You are a helpful assistant. You will do everything by using this tool.",
+    instructions="You will do everything by using this tool.",
     log_level="ERROR",
 )
 
