@@ -1,0 +1,13 @@
+[project]
+name = "mcp-incubator"
+version = "0.1.0"
+description = ""
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = ["templatemcp"]
+
+[tool.uv.workspace]
+members = ["servers/templatemcp"]
+
+[tool.uv.sources]
+templatemcp = { workspace = true }
