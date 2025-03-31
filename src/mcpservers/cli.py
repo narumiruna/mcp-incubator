@@ -55,7 +55,7 @@ def bot() -> None:
                     inputs=[gr.Dropdown(choices=provider_names, label="Provider")],
                     outputs=[],
                     live=True,
-                    allow_flagging="never",
+                    flagging_mode="never",
                     clear_btn=None,
                 )
             # set instructions
@@ -63,7 +63,7 @@ def bot() -> None:
                 fn=bot.set_instructions,
                 inputs=[gr.Textbox(label="Instructions", value=bot.agent.instructions)],
                 outputs=[],
-                allow_flagging="never",
+                flagging_mode="never",
                 clear_btn=None,
             )
 
