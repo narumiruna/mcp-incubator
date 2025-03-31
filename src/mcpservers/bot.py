@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from agents import Agent
+from agents import RunConfig
 from agents import Runner
 from agents.mcp import MCPServer
 
@@ -24,6 +25,9 @@ class Bot:
 
         self._connected = False
         self.input_items: list[Any] = []
+
+    def set_run_config(self, run_config: RunConfig) -> None:
+        self.run_config = run_config
 
     async def _connect(self) -> None:
         if self._connected:

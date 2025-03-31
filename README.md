@@ -19,11 +19,7 @@ uv sync
 Run the bot:
 
 ```sh
-# run the stock bot
-uv run mcpservers stock
-
-# run the time bot
-uv run mcpservers time
+uv run mcpservers
 ```
 
 ## Add New MCP Server
@@ -41,4 +37,4 @@ planningmcp = { workspace = true }
 yourmcp = { workspace = true }
 ```
 
-3. [Optional] Add a new bot in `mcpservers.cli` to test your MCP server.
+3. Add your MCP server to bot in `mcpservers.cli` file.
