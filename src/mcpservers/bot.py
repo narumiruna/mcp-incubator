@@ -7,8 +7,8 @@ from agents import Runner
 from agents.mcp import MCPServer
 from loguru import logger
 
-from mcpservers.config import get_model_settings
-from mcpservers.config import get_run_config
+from mcpservers.models import get_model
+from mcpservers.models import get_model_settings
 from mcpservers.utils import log_new_items
 
 
@@ -18,10 +18,10 @@ class Bot:
         self.agent = Agent(
             name=self.__class__.__name__,
             instructions=instructions,
+            model=get_model(),
             model_settings=get_model_settings(),
             mcp_servers=self.mcp_servers,
         )
-        self.run_config = get_run_config()
 
         self._connected = False
         self.input_items: list[Any] = []
@@ -30,18 +30,15 @@ class Bot:
         logger.info("Clearning messages")
         self.input_items = []
 
-    def set_provider(self, provider: str) -> None:
-        logger.info(f"Switching to {provider} provider")
-        self.run_config = get_run_config(provider)
+    def set_model(self, provider: str) -> None:
+        logger.info(f"Switching to {provider}'s model")
+        self.agent.model = get_model(provider)
 
         self.clear_messages()
 
     def set_instructions(self, instructions: str | None) -> None:
         logger.info(f"Setting instructions: {instructions}")
         self.agent.instructions = instructions
-
-    def set_model(self, model: str) -> None:
-        self.run_config.model = model
 
     async def _connect(self) -> None:
         if self._connected:
@@ -60,11 +57,7 @@ class Bot:
                 "content": text,
             }
         )
-        result = await Runner.run(
-            self.agent,
-            input=self.input_items,
-            run_config=self.run_config,
-        )
+        result = await Runner.run(self.agent, input=self.input_items)
         self.input_items = result.to_input_list()
 
         log_new_items(result.new_items)

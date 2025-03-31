@@ -11,7 +11,7 @@ from dotenv import find_dotenv
 from dotenv import load_dotenv
 
 from .bot import Bot
-from .config import get_available_providers
+from .models import get_providers
 
 DEFAULT_INSTRUCTIONS: Final[str] = """使用台灣正體中文。擅長邏輯推理且謹慎，能夠將問題拆解並逐步進行思考。"""
 
@@ -45,8 +45,8 @@ def bot() -> None:
             with gr.Column():
                 # switch provider
                 gr.Interface(
-                    fn=bot.set_provider,
-                    inputs=[gr.Dropdown(choices=get_available_providers(), label="Provider")],
+                    fn=bot.set_model,
+                    inputs=[gr.Dropdown(choices=get_providers(), label="Provider")],
                     outputs=[],
                     live=True,
                     flagging_mode="never",
