@@ -9,7 +9,6 @@ from loguru import logger
 
 from mcpservers.config import get_model_settings
 from mcpservers.config import get_run_config
-from mcpservers.config import get_run_configs
 from mcpservers.utils import log_new_items
 
 
@@ -32,13 +31,8 @@ class Bot:
         self.input_items = []
 
     def set_provider(self, provider: str) -> None:
-        run_configs = get_run_configs()
-        if provider not in run_configs:
-            logger.error("Provider {} not found in run configs.", provider)
-            return
-
         logger.info(f"Switching to {provider} provider")
-        self.run_config = run_configs[provider]
+        self.run_config = get_run_config(provider)
 
         self.clear_messages()
 
