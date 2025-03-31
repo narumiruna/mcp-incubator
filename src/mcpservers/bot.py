@@ -7,8 +7,8 @@ from agents import Runner
 from agents.mcp import MCPServer
 from loguru import logger
 
-from mcpservers.config import get_model
-from mcpservers.config import get_model_settings
+from mcpservers.models import get_model
+from mcpservers.models import get_model_settings
 from mcpservers.utils import log_new_items
 
 
