@@ -24,7 +24,14 @@ def bot(instructions: str | None = None) -> None:
                 "command": "uvx",
                 "args": ["yfmcp"],
             }
-        )
+        ),
+        # https://github.com/modelcontextprotocol/servers/tree/main/src/time
+        MCPServerStdio(
+            params={
+                "command": "uvx",
+                "args": ["mcp-server-time", "--local-timezone=Asia/Taipei"],
+            }
+        ),
     ]
 
     bot = Bot(instructions=instructions, mcp_servers=mcp_servers)
@@ -45,28 +52,5 @@ def bot(instructions: str | None = None) -> None:
             )
             gr.ChatInterface(bot.chat, type="messages")
         demo.launch()
-
-    anyio.run(bot.cleanup)
-
-
-@app.command()
-def time(instructions: str | None = None) -> None:
-    load_dotenv()
-
-    bot = Bot(
-        instructions=instructions,
-        mcp_servers=[
-            # https://github.com/modelcontextprotocol/servers/tree/main/src/time
-            MCPServerStdio(
-                params={
-                    "command": "uvx",
-                    "args": ["mcp-server-time", "--local-timezone=Asia/Taipei"],
-                }
-            )
-        ],
-    )
-
-    demo = gr.ChatInterface(bot.chat, type="messages")
-    demo.launch()
 
     anyio.run(bot.cleanup)
