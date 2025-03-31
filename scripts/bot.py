@@ -59,10 +59,14 @@ def get_openai_client() -> AsyncOpenAI:
     return AsyncOpenAI()
 
 
+def shorten_text(text: str, width: int = 100, placeholder: str = "...") -> str:
+    return textwrap.shorten(text, width=width, placeholder=placeholder)
+
+
 def log_new_items(new_items: list[RunItem]) -> None:
     for new_item in new_items:
         if isinstance(new_item, MessageOutputItem):
-            logger.info("Message: {}", ItemHelpers.text_message_output(new_item))
+            logger.info("Message: {}", shorten_text(ItemHelpers.text_message_output(new_item)))
         elif isinstance(new_item, HandoffOutputItem):
             logger.info(
                 "Handed off from {} to {}",
@@ -76,10 +80,7 @@ def log_new_items(new_items: list[RunItem]) -> None:
                 new_item.raw_item.arguments,
             )
         elif isinstance(new_item, ToolCallOutputItem):
-            logger.info(
-                "Tool call output: {}",
-                textwrap.shorten(new_item.raw_item["output"], width=100, placeholder="..."),
-            )
+            logger.info("Tool call output: {}", shorten_text(new_item.raw_item["output"]))
         else:
             logger.info("Skipping item: {}", new_item.__class__.__name__)
 
@@ -106,7 +107,7 @@ class Bot:
             await mcp_server.connect()
         self._connected = True
 
-    async def chat(self, text: str, _: list[dict[str, str]]) -> dict[str, str]:
+    async def chat(self, text: str, history: list[dict[str, str]]) -> dict[str, str]:
         await self._connect()
 
         self.input_items.append(
