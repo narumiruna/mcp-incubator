@@ -12,7 +12,7 @@ from mcpservers.utils import log_new_items
 
 
 class Bot:
-    def __init__(self, instructions: str, mcp_servers: list[MCPServer] | None = None) -> None:
+    def __init__(self, instructions: str | None = None, mcp_servers: list[MCPServer] | None = None) -> None:
         self.mcp_servers = mcp_servers or []
         self.agent = Agent(
             name=self.__class__.__name__,

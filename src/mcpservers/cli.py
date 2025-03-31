@@ -12,7 +12,7 @@ app = typer.Typer()
 
 
 @app.command()
-def bot(instructions: str = "使用繁體中文回答問題") -> None:
+def stock(instructions: str | None = None) -> None:
     load_dotenv()
 
     bot = Bot(
@@ -22,6 +22,29 @@ def bot(instructions: str = "使用繁體中文回答問題") -> None:
                 params={
                     "command": "uvx",
                     "args": ["yfmcp"],
+                }
+            )
+        ],
+    )
+
+    demo = gr.ChatInterface(bot.chat, type="messages")
+    demo.launch()
+
+    anyio.run(bot.cleanup)
+
+
+@app.command()
+def time(instructions: str | None = None) -> None:
+    load_dotenv()
+
+    bot = Bot(
+        instructions=instructions,
+        mcp_servers=[
+            # https://github.com/modelcontextprotocol/servers/tree/main/src/time
+            MCPServerStdio(
+                params={
+                    "command": "uvx",
+                    "args": ["mcp-server-time", "--local-timezone=Asia/Taipei"],
                 }
             )
         ],
