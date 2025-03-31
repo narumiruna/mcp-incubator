@@ -538,6 +538,7 @@ dependencies = [
     { name = "planningmcp" },
     { name = "python-dotenv" },
     { name = "templatemcp" },
+    { name = "typer" },
 ]
 
 [package.metadata]
@@ -548,6 +549,7 @@ requires-dist = [
     { name = "planningmcp", editable = "servers/planningmcp" },
     { name = "python-dotenv", specifier = ">=1.1.0" },
     { name = "templatemcp", editable = "servers/templatemcp" },
+    { name = "typer", specifier = ">=0.15.2" },
 ]
 
 [[package]]

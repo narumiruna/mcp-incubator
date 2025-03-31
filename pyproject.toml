@@ -11,6 +11,7 @@ dependencies = [
     "planningmcp",
     "python-dotenv>=1.1.0",
     "templatemcp",
+    "typer>=0.15.2",
 ]
 
 [tool.uv.workspace]

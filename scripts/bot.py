@@ -7,6 +7,7 @@ from typing import cast
 
 import anyio
 import gradio as gr
+import typer
 from agents import Agent
 from agents import HandoffOutputItem
 from agents import ItemHelpers
@@ -129,11 +130,11 @@ class Bot:
             await mcp_server.cleanup()
 
 
-def main() -> None:
+def main(instructions: str = "使用繁體中文回答問題") -> None:
     load_dotenv()
 
     bot = Bot(
-        instructions="使用繁體中文回答問題",
+        instructions=instructions,
         mcp_servers=[
             MCPServerStdio(
                 params={
@@ -151,4 +152,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    typer.run(main)
