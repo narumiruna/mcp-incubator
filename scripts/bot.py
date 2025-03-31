@@ -1,23 +1,30 @@
 from __future__ import annotations
 
 import os
+import textwrap
 from functools import cache
 from typing import cast
 
 import anyio
 import gradio as gr
-from agents import (
-    Agent,
-    ModelSettings,
-    OpenAIChatCompletionsModel,
-    Runner,
-    set_default_openai_client,
-    set_default_openai_key,
-    set_tracing_disabled,
-)
+from agents import Agent
+from agents import HandoffOutputItem
+from agents import ItemHelpers
+from agents import MessageOutputItem
+from agents import ModelSettings
+from agents import OpenAIChatCompletionsModel
+from agents import RunItem
+from agents import Runner
+from agents import ToolCallItem
+from agents import ToolCallOutputItem
+from agents import set_default_openai_client
+from agents import set_default_openai_key
+from agents import set_tracing_disabled
 from agents.mcp import MCPServerStdio
 from dotenv import load_dotenv
-from openai import AsyncAzureOpenAI, AsyncOpenAI
+from loguru import logger
+from openai import AsyncAzureOpenAI
+from openai import AsyncOpenAI
 
 
 @cache
@@ -51,19 +58,44 @@ def get_openai_client() -> AsyncOpenAI:
     return AsyncOpenAI()
 
 
+def log_new_items(new_items: list[RunItem]) -> None:
+    for new_item in new_items:
+        if isinstance(new_item, MessageOutputItem):
+            logger.info("Message: {}", ItemHelpers.text_message_output(new_item))
+        elif isinstance(new_item, HandoffOutputItem):
+            logger.info(
+                "Handed off from {} to {}",
+                new_item.source_agent.name,
+                new_item.target_agent.name,
+            )
+        elif isinstance(new_item, ToolCallItem):
+            logger.info(
+                "Calling tool: {}({})",
+                new_item.raw_item.name,
+                new_item.raw_item.arguments,
+            )
+        elif isinstance(new_item, ToolCallOutputItem):
+            logger.info(
+                "Tool call output: {}",
+                textwrap.shorten(new_item.raw_item["output"], width=100, placeholder="..."),
+            )
+        else:
+            logger.info("Skipping item: {}", new_item.__class__.__name__)
+
+
 class Bot:
-    def __init__(self, mcp_servers: list[MCPServerStdio] | None = None) -> None:
+    def __init__(self, instructions: str, mcp_servers: list[MCPServerStdio] | None = None) -> None:
         self.mcp_servers = mcp_servers or []
         self.agent = Agent(
-            name="Bot",
-            instructions="使用台灣中文",
+            name=self.__class__.__name__,
+            instructions=instructions,
             model=get_openai_model(),
             model_settings=get_openai_model_settings(),
             mcp_servers=self.mcp_servers,
         )
 
         self._connected = False
-        self.input_items = []
+        self.input_items = []  # type: ignore
 
     async def _connect(self) -> None:
         if self._connected:
@@ -84,6 +116,9 @@ class Bot:
         )
         result = await Runner.run(self.agent, input=self.input_items)
         self.input_items = result.to_input_list()
+
+        log_new_items(result.new_items)
+
         return {
             "role": "assistant",
             "content": result.final_output,
@@ -98,14 +133,15 @@ def main() -> None:
     load_dotenv()
 
     bot = Bot(
-        [
+        instructions="使用繁體中文回答問題",
+        mcp_servers=[
             MCPServerStdio(
                 params={
                     "command": "uvx",
                     "args": ["yfmcp"],
                 }
             )
-        ]
+        ],
     )
 
     demo = gr.ChatInterface(bot.chat, type="messages")
