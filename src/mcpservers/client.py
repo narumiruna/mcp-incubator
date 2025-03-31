@@ -30,7 +30,7 @@ def get_openai_model() -> OpenAIChatCompletionsModel:
 
 @cache
 def get_openai_client() -> AsyncOpenAI:
-    azure_api_key = os.getenv(key="AZURE_OPENAI_API_KEY")
+    azure_api_key = os.getenv("AZURE_OPENAI_API_KEY")
     if azure_api_key is not None:
         azure_client = AsyncAzureOpenAI(api_key=azure_api_key)
         set_default_openai_key(azure_api_key)
