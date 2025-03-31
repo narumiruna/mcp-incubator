@@ -21,7 +21,7 @@ class AzureModelProvider(ModelProvider):
 
     def get_model(self, model_name: str | None) -> Model:
         if model_name is None:
-            model_name = os.getenv("OPENAI_MODEL")
+            model_name = os.getenv("AZURE_OPENAI_MODEL")
 
         return OpenAIChatCompletionsModel(
             model=model_name or DEFAULT_OPENAI_MODEL,

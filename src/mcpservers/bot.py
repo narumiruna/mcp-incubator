@@ -3,12 +3,13 @@ from __future__ import annotations
 from typing import Any
 
 from agents import Agent
-from agents import RunConfig
 from agents import Runner
 from agents.mcp import MCPServer
+from loguru import logger
 
 from mcpservers.config import get_model_settings
 from mcpservers.config import get_run_config
+from mcpservers.config import get_run_configs
 from mcpservers.utils import log_new_items
 
 
@@ -26,8 +27,27 @@ class Bot:
         self._connected = False
         self.input_items: list[Any] = []
 
-    def set_run_config(self, run_config: RunConfig) -> None:
-        self.run_config = run_config
+    def clear_messages(self) -> None:
+        logger.info("Clearning messages")
+        self.input_items = []
+
+    def set_provider(self, provider: str) -> None:
+        run_configs = get_run_configs()
+        if provider not in run_configs:
+            logger.error("Provider {} not found in run configs.", provider)
+            return
+
+        logger.info(f"Switching to {provider} provider")
+        self.run_config = run_configs[provider]
+
+        self.clear_messages()
+
+    def set_instructions(self, instructions: str | None) -> None:
+        logger.info(f"Setting instructions: {instructions}")
+        self.agent.instructions = instructions
+
+    def set_model(self, model: str) -> None:
+        self.run_config.model = model
 
     async def _connect(self) -> None:
         if self._connected:
