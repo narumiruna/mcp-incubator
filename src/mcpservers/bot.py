@@ -6,8 +6,8 @@ from agents import Agent
 from agents import Runner
 from agents.mcp import MCPServer
 
-from mcpservers.client import get_openai_model
-from mcpservers.client import get_openai_model_settings
+from mcpservers.config import get_model_settings
+from mcpservers.config import get_run_config
 from mcpservers.utils import log_new_items
 
 
@@ -17,10 +17,10 @@ class Bot:
         self.agent = Agent(
             name=self.__class__.__name__,
             instructions=instructions,
-            model=get_openai_model(),
-            model_settings=get_openai_model_settings(),
+            model_settings=get_model_settings(),
             mcp_servers=self.mcp_servers,
         )
+        self.run_config = get_run_config()
 
         self._connected = False
         self.input_items: list[Any] = []
@@ -42,7 +42,11 @@ class Bot:
                 "content": text,
             }
         )
-        result = await Runner.run(self.agent, input=self.input_items)
+        result = await Runner.run(
+            self.agent,
+            input=self.input_items,
+            run_config=self.run_config,
+        )
         self.input_items = result.to_input_list()
 
         log_new_items(result.new_items)
