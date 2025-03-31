@@ -19,7 +19,11 @@ uv sync
 Run the bot:
 
 ```sh
-uv run mcpservers bot
+# run the stock bot
+uv run mcpservers stock
+
+# run the time bot
+uv run mcpservers time
 ```
 
 ## Add New MCP Server
@@ -37,42 +41,4 @@ planningmcp = { workspace = true }
 yourmcp = { workspace = true }
 ```
 
-3. Or you can add a new bot to `mcpservers.cli`, for example:
-
-```python
-import anyio
-import gradio as gr
-import typer
-from agents.mcp import MCPServerStdio
-from dotenv import load_dotenv
-
-from .bot import Bot
-
-app = typer.Typer()
-
-
-@app.command()
-def stock_bot(instructions: str = "...") -> None:
-    load_dotenv()
-
-    bot = Bot(
-        instructions=instructions,
-        mcp_servers=[
-            MCPServerStdio(
-                params={
-                    "command": "uvx",
-                    "args": ["yfmcp"],
-                }
-            )
-        ],
-    )
-
-    demo = gr.ChatInterface(bot.chat, type="messages")
-    demo.launch()
-
-    anyio.run(bot.cleanup)
-
-@app.command()
-def bot(instructions: str = "...") -> None:
-...
-```
+3. [Optional] Add a new bot in `mcpservers.cli` to test your MCP server.
