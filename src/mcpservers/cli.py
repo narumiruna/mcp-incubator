@@ -11,7 +11,7 @@ from dotenv import find_dotenv
 from dotenv import load_dotenv
 
 from .bot import Bot
-from .config import get_run_configs
+from .config import get_available_providers
 
 DEFAULT_INSTRUCTIONS: Final[str] = """使用台灣正體中文。擅長邏輯推理且謹慎，能夠將問題拆解並逐步進行思考。"""
 
@@ -40,19 +40,13 @@ def bot() -> None:
     ]
 
     bot = Bot(instructions=DEFAULT_INSTRUCTIONS, mcp_servers=mcp_servers)
-
-    run_configs = get_run_configs()
-    provider_names = list(run_configs.keys())
-    if len(provider_names) == 0:
-        raise ValueError("No providers found.")
-
     with gr.Blocks(theme=gr.themes.Soft()) as demo:
         with gr.Row():
             with gr.Column():
                 # switch provider
                 gr.Interface(
                     fn=bot.set_provider,
-                    inputs=[gr.Dropdown(choices=provider_names, label="Provider")],
+                    inputs=[gr.Dropdown(choices=get_available_providers(), label="Provider")],
                     outputs=[],
                     live=True,
                     flagging_mode="never",
