@@ -7,7 +7,7 @@ resolution-markers = [
 
 [manifest]
 members = [
-    "mcp-servers",
+    "mcpservers",
     "planningmcp",
     "templatemcp",
 ]
@@ -528,7 +528,7 @@ wheels = [
 ]
 
 [[package]]
-name = "mcp-servers"
+name = "mcpservers"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
