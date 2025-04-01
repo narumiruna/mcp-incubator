@@ -40,18 +40,17 @@ def bot() -> None:
     ]
 
     bot = Bot(instructions=DEFAULT_INSTRUCTIONS, mcp_servers=mcp_servers)
-    with gr.Blocks(theme=gr.themes.Soft()) as demo:
+    with gr.Blocks(theme=gr.themes.Soft(), fill_height=True) as demo:
         with gr.Row():
-            with gr.Column():
-                # switch provider
-                gr.Interface(
-                    fn=bot.set_model,
-                    inputs=[gr.Dropdown(choices=get_providers(), label="Provider")],
-                    outputs=[],
-                    live=True,
-                    flagging_mode="never",
-                    clear_btn=None,
-                )
+            # switch provider
+            gr.Interface(
+                fn=bot.set_model,
+                inputs=[gr.Dropdown(choices=get_providers(), label="Provider")],
+                outputs=[],
+                live=True,
+                flagging_mode="never",
+                clear_btn=None,
+            )
             # set instructions
             gr.Interface(
                 fn=bot.set_instructions,
