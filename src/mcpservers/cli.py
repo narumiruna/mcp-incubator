@@ -5,6 +5,7 @@ from typing import Final
 import anyio
 import gradio as gr
 import typer
+from agents.mcp import MCPServer
 from agents.mcp import MCPServerStdio
 from dotenv import find_dotenv
 from dotenv import load_dotenv
@@ -18,48 +19,49 @@ DEFAULT_INSTRUCTIONS: Final[str] = """使用台灣正體中文。擅長邏輯推
 app = typer.Typer()
 
 
-async def run_bot() -> None:
-    async with (
+@app.command()
+def bot() -> None:
+    load_dotenv(find_dotenv())
+
+    mcp_servers: list[MCPServer] = [
         MCPServerStdio(
             params={
                 "command": "uvx",
                 "args": ["yfmcp"],
             }
-        ) as yfmcp_server,
+        ),
+        # https://github.com/modelcontextprotocol/servers/tree/main/src/time
         MCPServerStdio(
             params={
                 "command": "uvx",
                 "args": ["mcp-server-time", "--local-timezone=Asia/Taipei"],
             }
-        ) as time_server,
-    ):
-        bot = Bot(instructions=DEFAULT_INSTRUCTIONS, mcp_servers=[yfmcp_server, time_server])
-        with gr.Blocks(theme=gr.themes.Soft()) as demo:
-            with gr.Row():
-                with gr.Column():
-                    # switch provider
-                    gr.Interface(
-                        fn=bot.set_model,
-                        inputs=[gr.Dropdown(choices=get_providers(), label="Provider")],
-                        outputs=[],
-                        live=True,
-                        flagging_mode="never",
-                        clear_btn=None,
-                    )
-                # set instructions
+        ),
+    ]
+
+    bot = Bot(instructions=DEFAULT_INSTRUCTIONS, mcp_servers=mcp_servers)
+    with gr.Blocks(theme=gr.themes.Soft()) as demo:
+        with gr.Row():
+            with gr.Column():
+                # switch provider
                 gr.Interface(
-                    fn=bot.set_instructions,
-                    inputs=[gr.Textbox(label="Instructions", value=bot.agent.instructions)],
+                    fn=bot.set_model,
+                    inputs=[gr.Dropdown(choices=get_providers(), label="Provider")],
                     outputs=[],
+                    live=True,
                     flagging_mode="never",
                     clear_btn=None,
                 )
+            # set instructions
+            gr.Interface(
+                fn=bot.set_instructions,
+                inputs=[gr.Textbox(label="Instructions", value=bot.agent.instructions)],
+                outputs=[],
+                flagging_mode="never",
+                clear_btn=None,
+            )
 
-            gr.ChatInterface(bot.chat, type="messages")
-            demo.launch()
+        gr.ChatInterface(bot.chat, type="messages")
+        demo.launch()
 
-
-@app.command()
-def bot() -> None:
-    load_dotenv(find_dotenv())
-    anyio.run(run_bot)
+    anyio.run(bot.cleanup)
