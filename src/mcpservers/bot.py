@@ -40,7 +40,17 @@ class Bot:
         logger.info(f"Setting instructions: {instructions}")
         self.agent.instructions = instructions
 
+    async def _connect(self) -> None:
+        if self._connected:
+            return
+
+        for mcp_server in self.mcp_servers:
+            await mcp_server.connect()
+        self._connected = True
+
     async def chat(self, text: str, history: list[dict[str, str]]) -> dict[str, str]:
+        await self._connect()
+
         self.input_items.append(
             {
                 "role": "user",
