@@ -1,16 +1,16 @@
 from __future__ import annotations
 
+from typing import Annotated
 from typing import Final
 
 import anyio
 import gradio as gr
 import typer
-from agents.mcp import MCPServer
-from agents.mcp import MCPServerStdio
 from dotenv import find_dotenv
 from dotenv import load_dotenv
 
 from .bot import Bot
+from .config import load_mcp_servers_from_json
 from .models import get_providers
 
 DEFAULT_INSTRUCTIONS: Final[str] = """使用台灣正體中文。擅長邏輯推理且謹慎，能夠將問題拆解並逐步進行思考。"""
@@ -20,25 +20,10 @@ app = typer.Typer()
 
 
 @app.command()
-def bot() -> None:
+def bot(config_file: Annotated[str, typer.Option("-c", "--config")] = "config/default.json") -> None:
     load_dotenv(find_dotenv())
 
-    mcp_servers: list[MCPServer] = [
-        MCPServerStdio(
-            params={
-                "command": "uvx",
-                "args": ["yfmcp"],
-            }
-        ),
-        # https://github.com/modelcontextprotocol/servers/tree/main/src/time
-        MCPServerStdio(
-            params={
-                "command": "uvx",
-                "args": ["mcp-server-time", "--local-timezone=Asia/Taipei"],
-            }
-        ),
-    ]
-
+    mcp_servers = load_mcp_servers_from_json(config_file)
     bot = Bot(instructions=DEFAULT_INSTRUCTIONS, mcp_servers=mcp_servers)
     with gr.Blocks(theme=gr.themes.Soft(), fill_height=True) as demo:
         with gr.Row():
