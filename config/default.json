@@ -1,17 +1,12 @@
 {
-    "mcpServers": {
-        "yfmcp": {
-            "command": "uvx",
-            "args": [
-                "yfmcp"
-            ]
-        },
-        "time": {
-            "command": "uvx",
-            "args": [
-                "mcp-server-time",
-                "--local-timezone=Asia/Taipei"
-            ]
-        }
+  "mcpServers": {
+    "yfmcp": {
+      "command": "uvx",
+      "args": ["yfmcp"]
+    },
+    "time": {
+      "command": "uvx",
+      "args": ["mcp-server-time", "--local-timezone=Asia/Taipei"]
     }
+  }
 }
