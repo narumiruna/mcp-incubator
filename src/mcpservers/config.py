@@ -15,6 +15,6 @@ def load_json(f: str | Path) -> MCPServerConfig:
         return json.load(fp)
 
 
-def load_config(f: str | Path) -> list[MCPServerStdio]:
-    data = load_json(f)
-    return [MCPServerStdio(params=params) for params in data["mcpServers"].values()]
+def load_mcp_servers_from_json(f: str | Path) -> list[MCPServerStdio]:
+    config = load_json(f)
+    return [MCPServerStdio(params=params) for params in config["mcpServers"].values()]

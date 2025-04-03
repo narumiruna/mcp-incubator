@@ -10,7 +10,7 @@ from dotenv import find_dotenv
 from dotenv import load_dotenv
 
 from .bot import Bot
-from .config import load_config
+from .config import load_mcp_servers_from_json
 from .models import get_providers
 
 DEFAULT_INSTRUCTIONS: Final[str] = """使用台灣正體中文。擅長邏輯推理且謹慎，能夠將問題拆解並逐步進行思考。"""
@@ -23,7 +23,7 @@ app = typer.Typer()
 def bot(config_file: Annotated[str, typer.Option("-c", "--config")] = "config/default.json") -> None:
     load_dotenv(find_dotenv())
 
-    mcp_servers = load_config(config_file)
+    mcp_servers = load_mcp_servers_from_json(config_file)
     bot = Bot(instructions=DEFAULT_INSTRUCTIONS, mcp_servers=mcp_servers)
     with gr.Blocks(theme=gr.themes.Soft(), fill_height=True) as demo:
         with gr.Row():
