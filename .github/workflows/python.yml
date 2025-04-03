@@ -2,12 +2,12 @@ name: Python
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - main
-  # pull_request:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   python:
@@ -15,6 +15,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.12"]
+        mcp-server: ["servers/planningmcp", "servers/templatemcp"]
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
@@ -22,13 +23,13 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: uv sync
+        working-directory: ${{ matrix.mcp-server }}
       - name: Lint
         run: uv run ruff check .
+        working-directory: ${{ matrix.mcp-server }}
       - name: Type check
         run: uv run mypy --install-types --non-interactive .
+        working-directory: ${{ matrix.mcp-server }}
       - name: Test
         run: uv run pytest -v -s --cov=src --cov-report=xml tests
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+        working-directory: ${{ matrix.mcp-server }}
