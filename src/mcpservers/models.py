@@ -53,7 +53,7 @@ def get_azure_model() -> OpenAIChatCompletionsModel:
 def get_gemini_model() -> OpenAIChatCompletionsModel:
     set_tracing_disabled(True)
     return OpenAIChatCompletionsModel(
-        model=os.getenv("GEMINI_MODEL", "gpt-4o-mini"),
+        model=os.getenv("GEMINI_MODEL", "gemini-2.0-flash"),
         openai_client=AsyncOpenAI(
             api_key=os.getenv("GEMINI_API_KEY"),
             base_url=os.getenv(
