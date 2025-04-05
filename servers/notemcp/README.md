@@ -1,4 +1,4 @@
-# MCP Server Template
+# NoteMCP
 
 ## Tools
 
