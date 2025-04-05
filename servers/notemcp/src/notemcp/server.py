@@ -66,12 +66,14 @@ def update_note_file(
     notes: Annotated[list[str], Field(description="The notes to update")],
 ) -> str:
     """This tool updates notes in a markdown file."""
-    filename = Path(f"{subject}.md")
+    filename = Path(get_base_dir()) / f"{subject}.md"
 
     content = "\n".join(
         [
             f"# {subject}",
-            f"keywords: {', '.join(keywords)}",
+            "## Keywords",
+            ", ".join(keywords),
+            "## Notes",
         ]
         + [f"- {note}" for note in notes],
     )

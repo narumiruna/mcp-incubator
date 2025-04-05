@@ -7,6 +7,7 @@ requires-python = ">=3.12"
 dependencies = [
     "anyio>=4.9.0",
     "gradio>=5.23.1",
+    "notemcp",
     "openai-agents>=0.0.7",
     "planningmcp",
     "python-dotenv>=1.1.0",
@@ -22,11 +23,12 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.uv.workspace]
-members = ["servers/templatemcp", "servers/planningmcp"]
+members = ["servers/templatemcp", "servers/planningmcp", "servers/notemcp"]
 
 [tool.uv.sources]
 templatemcp = { workspace = true }
 planningmcp = { workspace = true }
+notemcp = { workspace = true }
 
 [tool.ruff]
 exclude = ["build"]
