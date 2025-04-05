@@ -29,7 +29,7 @@ def get_providers() -> list[str]:
 @cache
 def get_model_settings() -> ModelSettings:
     temperature = float(os.getenv("OPENAI_TEMPERATURE", 0.0))
-    return ModelSettings(temperature=temperature)
+    return ModelSettings(temperature=temperature, tool_choice="required")
 
 
 @cache

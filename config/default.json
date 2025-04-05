@@ -1,5 +1,12 @@
 {
   "mcpServers": {
+    "notemcp": {
+      "command": "uv",
+      "args": ["run", "notemcp"],
+      "env": {
+        "NOTEMCP_BASE_DIR": "./notebook"
+      }
+    },
     "yfmcp": {
       "command": "uvx",
       "args": ["yfmcp"]

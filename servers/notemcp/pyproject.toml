@@ -1,34 +1,27 @@
 [project]
-name = "mcpservers"
+name = "notemcp"
 version = "0.1.0"
 description = ""
 readme = "README.md"
+authors = [{ name = "narumi", email = "toucans-cutouts0f@icloud.com" }]
 requires-python = ">=3.12"
-dependencies = [
-    "anyio>=4.9.0",
-    "gradio>=5.23.1",
-    "notemcp",
-    "openai-agents>=0.0.7",
-    "planningmcp",
-    "python-dotenv>=1.1.0",
-    "templatemcp",
-    "typer>=0.15.2",
-]
+dependencies = ["loguru>=0.7.3", "mcp>=1.6.0"]
 
 [project.scripts]
-mcpservers = "mcpservers.cli:app"
+notemcp = "notemcp.server:main"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[tool.uv.workspace]
-members = ["servers/templatemcp", "servers/planningmcp", "servers/notemcp"]
-
-[tool.uv.sources]
-templatemcp = { workspace = true }
-planningmcp = { workspace = true }
-notemcp = { workspace = true }
+[dependency-groups]
+dev = [
+    "mypy>=1.13.0",
+    "pip>=25.0.1",
+    "pytest>=8.3.3",
+    "pytest-cov>=6.0.0",
+    "ruff>=0.7.3",
+]
 
 [tool.ruff]
 exclude = ["build"]
@@ -58,14 +51,3 @@ filterwarnings = ["ignore::DeprecationWarning"]
 
 [tool.mypy]
 ignore_missing_imports = true
-
-[dependency-groups]
-dev = [
-    "mypy>=1.15.0",
-    "pip>=25.0.1",
-    "types-aiofiles>=24.1.0.20250326",
-    "types-pytz>=2025.2.0.20250326",
-    "types-pyyaml>=6.0.12.20250326",
-    "types-simplejson>=3.20.0.20250326",
-    "types-ujson>=5.10.0.20250326",
-]
