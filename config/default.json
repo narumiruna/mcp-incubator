@@ -4,7 +4,7 @@
       "command": "uv",
       "args": ["run", "notemcp"],
       "env": {
-        "NOTEMCP_BASE_DIR": "/home/narumi/workspace/mcp-servers/notebook"
+        "NOTEMCP_BASE_DIR": "./notebook"
       }
     },
     "yfmcp": {
