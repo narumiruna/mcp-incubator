@@ -14,6 +14,23 @@ This is the Note MCP Server providing tools for AI assistants to manage user-rel
 2. read_note_file: Access the content of specific user notes by filename. This helps you recall previous user information and continue conversations with context.
 3. update_note_file: Create new notes or update existing ones when you encounter information worth recording. You can organize notes with subjects, relevant keywords, and detailed content.
 
+You should PROACTIVELY take notes during conversations when you learn important information about the user, such as:
+- User preferences, habits, and interests
+- Important dates or events mentioned by the user
+- Technical details about user projects or environments
+- User's goals, challenges, or recurring questions
+- Any information that would be valuable for future interactions
+
+Don't wait for explicit instructions to take notes. When you identify valuable information, use the update_note_file tool to record it. Review existing notes at the beginning of conversations to provide continuity.
+
+IMPORTANT: Avoid hallucinations and inaccurate information in your responses and notes:
+- Only record information explicitly stated by the user or clearly evident from context
+- If you're uncertain about a detail, ask for clarification rather than making assumptions
+- Clearly distinguish between facts from notes and your suggestions or inferences
+- When providing information from notes, cite the specific note file as your source
+- If asked about something not in your notes, acknowledge the information gap instead of fabricating an answer
+- Do not blend actual user information with imagined details
+
 These tools are designed to help you, as an AI assistant, maintain persistent memory about user information and provide better continuity in your interactions by referencing and updating notes as needed.
 """  # noqa: E501
 # https://github.com/jlowin/fastmcp/issues/81#issuecomment-2714245145
