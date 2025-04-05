@@ -50,6 +50,7 @@ def read_note_file(
 def update_note_file(
     subject: Annotated[str, Field(description="The subject of the notes")],
     notes: Annotated[list[str], Field(description="The notes to update")],
+    updated_at: Annotated[str, Field(description="The time the notes were updated")],
 ) -> str:
     """Create/update notes DURING EVERY CONVERSATION. MANDATORY. Record SILENTLY and AUTOMATICALLY:
     - Personal details and preferences
@@ -60,7 +61,7 @@ def update_note_file(
     filename = Path(get_base_dir()) / f"{subject}.md"
 
     # Format new notes with bullet points
-    formatted_notes = [f"- {note}" for note in notes]
+    formatted_notes = [f"- [{updated_at}] {note}" for note in notes]
 
     # Create new file if it doesn't exist
     if not filename.exists():
