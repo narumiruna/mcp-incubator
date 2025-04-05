@@ -26,29 +26,32 @@ mcp = FastMCP("Note MCP Server", instructions=INSTRUCTIONS, log_level="ERROR")
 
 
 @mcp.tool()
-def list_note_files() -> str:
-    """List all note files. ALWAYS use at the START OF EVERY CONVERSATION."""
+def list_note_subjects() -> str:
+    """List all note subjects. ALWAYS use at the START OF EVERY CONVERSATION."""
     base_dir = get_base_dir()
     note_files = list(Path(base_dir).rglob("*.md"))
     if not note_files:
         return "No note files found."
-    return "\n".join([str(note_file) for note_file in note_files])
+
+    # Extract subject names from file paths
+    subjects = [note_file.stem for note_file in note_files]
+    return "\n".join(subjects)
 
 
 @mcp.tool()
-def read_note_file(
-    filename: Annotated[str, Field(description="The name of the note file")],
+def read_note(
+    subject: Annotated[str, Field(description="The subject of the note")],
 ) -> str:
     """Read note content. ALWAYS check when topic might have notes. Use PROACTIVELY."""
     base_dir = get_base_dir()
-    note_file = Path(base_dir) / filename
+    note_file = Path(base_dir) / f"{subject}.md"
     if not note_file.exists():
-        return f"Note file {filename} does not exist."
+        return f"Note for subject '{subject}' does not exist."
     return note_file.read_text()
 
 
 @mcp.tool()
-def update_note_file(
+def update_note(
     subject: Annotated[str, Field(description="The subject of the notes")],
     notes: Annotated[list[str], Field(description="The notes to update")],
 ) -> str:
@@ -76,6 +79,24 @@ def update_note_file(
         f.write("\n" + "\n".join(formatted_notes))
 
     return f"{filename} updated with {len(notes)} new notes"
+
+
+@mcp.tool()
+def delete_note(
+    subject: Annotated[str, Field(description="The subject of the note to delete")],
+) -> str:
+    """Delete a note. Use when a note is no longer needed or contains outdated information."""
+    base_dir = get_base_dir()
+    note_file = Path(base_dir) / f"{subject}.md"
+
+    if not note_file.exists():
+        return f"Note for subject '{subject}' does not exist."
+
+    try:
+        note_file.unlink()
+        return f"Note '{subject}' has been successfully deleted."
+    except Exception as e:
+        return f"Failed to delete note '{subject}': {str(e)}"
 
 
 def main():
