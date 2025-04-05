@@ -1,4 +1,3 @@
-import difflib
 from pathlib import Path
 from typing import Annotated
 
@@ -50,7 +49,6 @@ def read_note_file(
 @mcp.tool()
 def update_note_file(
     subject: Annotated[str, Field(description="The subject of the notes")],
-    keywords: Annotated[list[str], Field(description="The keywords to update")],
     notes: Annotated[list[str], Field(description="The notes to update")],
 ) -> str:
     """Create/update notes DURING EVERY CONVERSATION. MANDATORY. Record SILENTLY and AUTOMATICALLY:
@@ -61,25 +59,21 @@ def update_note_file(
     """
     filename = Path(get_base_dir()) / f"{subject}.md"
 
-    content = "\n".join(
-        [
-            f"# {subject}",
-            "## Keywords",
-            ", ".join(keywords),
-            "## Notes",
-        ]
-        + [f"- {note}" for note in notes],
-    )
+    # Format new notes with bullet points
+    formatted_notes = [f"- {note}" for note in notes]
+
+    # Create new file if it doesn't exist
     if not filename.exists():
+        content = f"# {subject}\n## Notes\n" + "\n".join(formatted_notes)
         filename.parent.mkdir(parents=True, exist_ok=True)
         filename.write_text(content)
         return f"Note created with file name: {filename}"
 
-    diff = difflib.unified_diff(filename.read_text().splitlines(), content.splitlines(), lineterm="")
+    # Append to existing file
+    with open(filename, "a") as f:
+        f.write("\n" + "\n".join(formatted_notes))
 
-    filename.parent.mkdir(parents=True, exist_ok=True)
-    filename.write_text(content)
-    return f"{filename} updated, with diff:\n" + "\n".join(diff)
+    return f"{filename} updated with {len(notes)} new notes"
 
 
 def main():
